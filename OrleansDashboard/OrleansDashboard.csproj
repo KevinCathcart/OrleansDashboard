@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFrameworks>netcoreapp3.1;netstandard2.0</TargetFrameworks>
     <AssemblyVersion>$(DashboardVersion)</AssemblyVersion>
     <Authors>OrleansContrib</Authors>
     <Company>OrleansContrib</Company>
@@ -17,8 +17,15 @@
     <Version>$(DashboardVersion)</Version>
   </PropertyGroup>
   
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' != 'netstandard2.0'">
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <Compile Remove="BasicAuthMiddleware.cs" />
+    <Compile Remove="DashboardMiddleware.cs" />
+    <Compile Remove="Implementation/TraceWriter.cs" />
+    <Compile Remove="Extensions.cs" />
   </ItemGroup>
   
   <ItemGroup>
@@ -31,7 +38,7 @@
     <None Include="OrleansLogo.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="$(TargetFramework) != 'netstandard2.0'">
     <EmbeddedResource Include="favicon.ico" />
     <EmbeddedResource Include="Index.html" />
     <EmbeddedResource Include="index.min.js" />

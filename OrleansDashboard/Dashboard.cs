@@ -2,8 +2,10 @@
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+#if !NETSTANDARD2_0
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+#endif
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Orleans;
@@ -13,7 +15,9 @@ namespace OrleansDashboard
 {
     public sealed class Dashboard : IStartupTask, IDisposable
     {
+#if !NETSTANDARD2_0
         private IWebHost host;
+#endif
         private readonly ILogger<Dashboard> logger;
         private readonly ILocalSiloDetails localSiloDetails;
         private readonly IGrainFactory grainFactory;
@@ -35,6 +39,7 @@ namespace OrleansDashboard
 
         public async Task Execute(CancellationToken cancellationToken)
         {
+#if !NETSTANDARD2_0
             if (dashboardOptions.HostSelf)
             {
                 try
@@ -69,7 +74,7 @@ namespace OrleansDashboard
 
                 logger.LogInformation($"Dashboard listening on {dashboardOptions.Port}");
             }
-
+#endif
             await Task.WhenAll(
                 ActivateDashboardGrainAsync(),
                 ActivateSiloGrainAsync());
@@ -93,7 +98,9 @@ namespace OrleansDashboard
         {
             try
             {
+#if !NETSTANDARD2_0
                 host?.Dispose();
+#endif
             }
             catch
             {

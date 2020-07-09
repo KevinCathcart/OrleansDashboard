@@ -1,5 +1,7 @@
 ﻿using System;
+#if !NETSTANDARD2_0
 using Microsoft.AspNetCore.Builder;
+#endif
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
@@ -83,7 +85,7 @@ namespace Orleans
         {
             appParts.AddFrameworkPart(typeof(Dashboard).Assembly).WithReferences();
         }
-
+#if !NETSTANDARD2_0
         public static IApplicationBuilder UseOrleansDashboard(this IApplicationBuilder app, DashboardOptions options = null)
         {
             if (string.IsNullOrEmpty(options?.BasePath) || options.BasePath == "/")
@@ -100,6 +102,7 @@ namespace Orleans
 
             return app;
         }
+#endif
 
         public static IServiceCollection AddServicesForSelfHostedDashboard(this IServiceCollection services, IClusterClient client = null,
             Action<DashboardOptions> configurator = null)
